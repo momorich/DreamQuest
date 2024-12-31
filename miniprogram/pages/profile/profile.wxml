@@ -1,3 +1,7 @@
 <view class="container">
+  <!-- 背景图片 -->
+  <image class="bg-image" src="/assets/images/main_bg.png" mode="aspectFill"></image>
+  
+  <!-- 页面内容 -->
   <text>我的页面</text>
 </view> 

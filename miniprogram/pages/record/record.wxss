@@ -1,3 +1,182 @@
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
 .container {
-  padding: 20rpx;
+  position: relative;
+  min-height: 100vh;
+  padding-top: 120px; /* 为固定头部预留空间 */
+  box-sizing: border-box;
+}
+
+/* 固定头部区域 */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: transparent;
+  padding: 20px 14px;
+}
+
+/* Tab 切换 */
+.tab-header {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+.tab-item {
+  position: relative;
+  padding: 4px 0;
+}
+
+.tab-item text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  font-family: PingFang SC;
+  font-weight: 400;
+}
+
+.tab-item.active text {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.tab-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+}
+
+.tab-item.active .tab-line {
+  background: #FFFFFF;
+}
+
+/* 搜索区域 */
+.search-area {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  height: 36px;
+  background: #FFFFFF;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.search-input {
+  flex: 1;
+  height: 100%;
+  font-size: 14px;
+}
+
+.voice-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+}
+
+.search-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  color: #971FCF;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 内容区域 */
+.content-area {
+  flex: 1;
+  width: 100%;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+/* 月份标题 */
+.month-title {
+  font-size: 16px;
+  color: #FFFFFF;
+  font-weight: 600;
+  margin: 16px 0;
+}
+
+/* 梦境卡片 */
+.dream-card {
+  background: rgba(255, 255, 255, 0.76);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.card-date {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.dream-image {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  object-fit: cover;
+}
+
+.dream-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #000000;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 4px 12px;
+  background: rgba(151, 31, 207, 0.1);
+  border-radius: 4px;
+  color: #971FCF;
+  font-size: 12px;
 } 

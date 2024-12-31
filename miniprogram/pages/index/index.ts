@@ -81,12 +81,15 @@ Component({
       const index = e.detail.value;
       this.setData({ 
         zodiacIndex: index,
-        hasSelectedZodiac: true
+        hasSelectedZodiac: true,
+        isFortuneExpanded: true
       });
       this.fetchFortune(this.data.zodiacs[index]);
     },
 
     toggleFortune() {
+      if (!this.data.hasSelectedZodiac) return;
+      
       this.setData({
         isFortuneExpanded: !this.data.isFortuneExpanded
       });
@@ -131,5 +134,78 @@ Component({
         console.error('获取周报失败：', error);
       }
     },
+
+    showInputModal() {
+      // TODO: 实现弹出输入浮层
+      wx.showModal({
+        title: '记录梦境',
+        editable: true,
+        placeholderText: '描述一下你的梦境...',
+        success: (res) => {
+          if (res.confirm && res.content) {
+            // TODO: 处理输入的内容
+            console.log('梦境内容：', res.content);
+          }
+        }
+      });
+    },
+
+    startVoiceInput() {
+      // 1. 显示录音浮层
+      wx.showModal({
+        title: '语音输入',
+        content: '请点击"开始录音"按钮并说话',
+        showCancel: true,
+        cancelText: '取消',
+        confirmText: '开始录音',
+        success: (res) => {
+          if (res.confirm) {
+            // 2. 开始录音
+            const recorderManager = wx.getRecorderManager();
+            
+            recorderManager.onStart(() => {
+              wx.showLoading({
+                title: '正在录音...',
+              });
+            });
+
+            recorderManager.onStop((res) => {
+              wx.hideLoading();
+              // 3. 将录音文件发送到语音识别服务
+              // TODO: 调用语音识别API
+              console.log('录音文件路径:', res.tempFilePath);
+              
+              // 临时显示提示
+              wx.showToast({
+                title: '语音识别功能开发中',
+                icon: 'none'
+              });
+            });
+
+            recorderManager.onError((res) => {
+              wx.hideLoading();
+              wx.showToast({
+                title: '录音失败',
+                icon: 'error'
+              });
+            });
+
+            // 开始录音
+            recorderManager.start({
+              duration: 60000, // 最长录音时间，单位ms
+              sampleRate: 16000,
+              numberOfChannels: 1,
+              encodeBitRate: 48000,
+              format: 'mp3'
+            });
+
+            // 5秒后自动停止录音
+            setTimeout(() => {
+              recorderManager.stop();
+            }, 5000);
+          }
+        }
+      });
+    }
   }
 })
