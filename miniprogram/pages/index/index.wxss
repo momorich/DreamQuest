@@ -61,3 +61,116 @@ page {
 .nickname-input {
   flex: 1;
 }
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #2D1B47 0%, #F8E6FF 100%);
+  padding: 0 20rpx;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.app-name {
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-left: 10rpx;
+}
+
+.date {
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.dream-theory {
+  color: #FFFFFF;
+  margin-bottom: 40rpx;
+}
+
+.theory-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.theory-content {
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.fortune-card, .weekly-report {
+  background: rgba(255, 255, 255, 0.76);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.fortune-content, .report-content {
+  font-size: 26rpx;
+  line-height: 1.6;
+  overflow: hidden;
+  max-height: 240rpx;
+}
+
+.expanded {
+  max-height: none;
+}
+
+.input-section {
+  position: fixed;
+  bottom: 120rpx;
+  left: 20rpx;
+  right: 20rpx;
+}
+
+.chat-bubble {
+  background: #F2F2F7;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.input-area {
+  display: flex;
+  align-items: center;
+}
+
+.dream-input {
+  flex: 1;
+  background: #FFFFFF;
+  border: 2rpx solid;
+  border-image: linear-gradient(to right, #CF14BF, #971FCF) 1;
+  border-radius: 36rpx;
+  padding: 20rpx;
+  margin-right: 20rpx;
+}
+
+.voice-btn {
+  width: 80rpx;
+  height: 80rpx;
+  background: linear-gradient(to right, #971FCF, #CF14BF);
+  border-radius: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -2,27 +2,54 @@
 <navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">呼呼昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+    <!-- 顶部 -->
+    <view class="header">
+      <view class="logo">
+        <image src="/assets/logo.png" mode="aspectFit"></image>
+        <text class="app-name">寻梦</text>
+      </view>
+      <text class="date">{{dateInfo}}</text>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+
+    <!-- 梦境知识 -->
+    <view class="dream-theory">
+      <text class="theory-title">✨ 弗洛伊德的梦境理论</text>
+      <text class="theory-content">{{dreamTheory}}</text>
+    </view>
+
+    <!-- 今日运势 -->
+    <view class="fortune-card" bindtap="toggleFortune">
+      <view class="card-header">
+        <image src="/assets/fortune.png" mode="aspectFit"></image>
+        <text>今日运势</text>
+      </view>
+      <view class="fortune-content {{isFortuneExpanded ? 'expanded' : ''}}">
+        <text>{{fortune.overall}}</text>
+        <text>{{fortune.career}}</text>
+      </view>
+    </view>
+
+    <!-- 梦境周报 -->
+    <view class="weekly-report" bindtap="toggleReport">
+      <view class="card-header">
+        <image src="/assets/report.png" mode="aspectFit"></image>
+        <text>梦境周报</text>
+      </view>
+      <image class="report-image" src="{{weeklyReport.image}}" mode="aspectFill"></image>
+      <view class="report-content {{isReportExpanded ? 'expanded' : ''}}">
+        <text>{{weeklyReport.content}}</text>
+      </view>
+    </view>
+
+    <!-- 底部输入区域 -->
+    <view class="input-section">
+      <view class="chat-bubble">昨晚梦到什么了嘛?记录一下吧 🤗</view>
+      <view class="input-area">
+        <input class="dream-input" placeholder="write your dream" bindtap="showInputModal"/>
+        <view class="voice-btn" bindtap="startVoiceInput">
+          <image src="/assets/mic.png" mode="aspectFit"></image>
+        </view>
+      </view>
     </view>
   </view>
 </scroll-view>
