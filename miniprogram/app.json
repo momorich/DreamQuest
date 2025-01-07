@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/record/record",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/analysis/analysis"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -34,5 +35,6 @@
         "selectedIconPath": "assets/tabbar/profile_selected.png"
       }
     ]
-  }
+  },
+  "usingComponents": {}
 }

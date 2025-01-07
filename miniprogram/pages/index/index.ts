@@ -35,6 +35,9 @@ Component({
       aiSuggestion: '试着记录梦中细节，特别是让你印象深刻的画面，或许能挖掘出潜藏的灵感或答案！'
     },
     isReportExpanded: false,
+    showDreamInput: false,
+    showDreamAnalysis: false,
+    currentDream: null
   },
 
   lifetimes: {
@@ -206,6 +209,34 @@ Component({
           }
         }
       });
+    },
+
+    showDreamInput() {
+      this.setData({
+        showDreamInput: true
+      });
+    },
+
+    onDreamSave(e: any) {
+      console.log('保存梦境:', e.detail)
+      this.setData({
+        showDreamInput: false,
+        showDreamAnalysis: true,
+        currentDream: e.detail
+      })
+    },
+
+    onDreamInputClose() {
+      this.setData({
+        showDreamInput: false
+      })
+    },
+
+    onDreamAnalysisClose() {
+      this.setData({
+        showDreamAnalysis: false,
+        currentDream: null
+      })
     }
   }
 })

@@ -1,0 +1,45 @@
+<view class="container">
+  <!-- 标题和日期 -->
+  <view class="header">
+    <text class="title">{{dreamData.title}}</text>
+    <text class="date">{{dreamData.date}}</text>
+  </view>
+
+  <!-- 梦境内容 -->
+  <view class="dream-content">
+    <text>{{dreamData.content}}</text>
+  </view>
+
+  <!-- AI生成的图片 -->
+  <view class="dream-image">
+    <image src="/assets/default_dream.png" mode="aspectFill"></image>
+  </view>
+
+  <!-- 分析标签 -->
+  <view class="tags">
+    <text class="tag" wx:for="{{['神秘', '探索', '冒险']}}" wx:key="*this">{{item}}</text>
+  </view>
+
+  <!-- AI对话区域 -->
+  <view class="chat-area">
+    <scroll-view class="messages" scroll-y scroll-into-view="msg{{messages.length - 1}}">
+      <view wx:for="{{messages}}" wx:key="index" class="message {{item.type}}" id="msg{{index}}">
+        <text>{{item.content}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <input class="message-input" 
+           value="{{inputMessage}}"
+           bindinput="onMessageInput"
+           placeholder="输入消息..."
+           placeholder-style="color: rgba(60, 60, 67, 0.6)"/>
+    <button class="send-btn {{inputMessage ? 'active' : ''}}" 
+            bindtap="sendMessage"
+            disabled="{{!inputMessage}}">
+      <image src="/assets/icons/send.png" mode="aspectFit"></image>
+    </button>
+  </view>
+</view> 

@@ -1,0 +1,145 @@
+.container {
+  min-height: 100vh;
+  background: #F8F8F8;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 40rpx;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 40rpx;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.date {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.dream-content {
+  padding: 32rpx;
+  background: white;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  line-height: 1.6;
+  color: #333;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 40rpx;
+}
+
+.dream-image {
+  height: 400rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 40rpx;
+}
+
+.dream-image image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-bottom: 40rpx;
+}
+
+.tag {
+  padding: 8rpx 24rpx;
+  background: rgba(207, 20, 191, 0.1);
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  color: #CF14BF;
+}
+
+.chat-area {
+  flex: 1;
+  background: white;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 40rpx;
+}
+
+.messages {
+  height: 100%;
+  padding: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.message {
+  max-width: 80%;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  line-height: 1.4;
+}
+
+.message.ai {
+  align-self: flex-start;
+  background: #E9E9EB;
+  color: #333;
+}
+
+.message.user {
+  align-self: flex-end;
+  background: linear-gradient(90deg, #CF14BF 0%, #971FCF 100%);
+  color: white;
+}
+
+.input-area {
+  padding: 20rpx;
+  background: white;
+  border-radius: 16rpx;
+  display: flex;
+  gap: 24rpx;
+  align-items: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.message-input {
+  flex: 1;
+  height: 72rpx;
+  background: rgba(60, 60, 67, 0.1);
+  border-radius: 36rpx;
+  padding: 0 32rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.send-btn {
+  width: 72rpx;
+  height: 72rpx;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #CF14BF 0%, #971FCF 100%);
+  border-radius: 36rpx;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.send-btn.active {
+  opacity: 1;
+}
+
+.send-btn image {
+  width: 40rpx;
+  height: 40rpx;
+} 

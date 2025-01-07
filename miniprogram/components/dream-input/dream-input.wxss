@@ -1,0 +1,86 @@
+.dream-input-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: none;
+}
+
+.dream-input-modal.visible {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  width: 90%;
+  height: 70vh;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+}
+
+.title-input {
+  font-size: 16px;
+  color: #333;
+  flex: 1;
+}
+
+.date {
+  font-size: 14px;
+  color: #999;
+  margin-left: 12px;
+}
+
+.content-area {
+  flex: 1;
+  border: 1px solid #CF14BF;
+  border-radius: 8px;
+  padding: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.content-input {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.save-btn {
+  width: 60px;
+  height: 36px;
+  background: linear-gradient(90deg, #CF14BF 0%, #971FCF 100%);
+  opacity: 0.3;
+  border-radius: 18px;
+  color: #FFFFFF;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  margin: 0;
+  padding: 0;
+  transition: opacity 0.3s ease;
+}
+
+.save-btn.active {
+  opacity: 1;
+} 

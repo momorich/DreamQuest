@@ -1,0 +1,30 @@
+<view class="dream-input-modal {{visible ? 'visible' : ''}}" bindtap="onModalTap">
+  <view class="modal-content" catchtap="onContentTap">
+    <!-- 标题栏 -->
+    <view class="header">
+      <input class="title-input" 
+             placeholder="请输入标题" 
+             value="{{title}}"
+             bindinput="onTitleInput"/>
+      <text class="date">{{currentDate}}</text>
+    </view>
+
+    <!-- 内容输入区 -->
+    <view class="content-area">
+      <textarea class="content-input"
+                placeholder="请输入梦境描述"
+                value="{{content}}"
+                bindinput="onContentInput"
+                maxlength="-1"
+                show-confirm-bar="{{false}}"
+                auto-height="{{false}}"/>
+    </view>
+
+    <!-- 保存按钮 -->
+    <button class="save-btn {{title && content ? 'active' : ''}}" 
+            bindtap="saveDream" 
+            disabled="{{!title || !content}}">
+      保存
+    </button>
+  </view>
+</view> 

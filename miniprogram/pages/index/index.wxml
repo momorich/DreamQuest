@@ -104,10 +104,25 @@
   <view class="input-section">
     <view class="chat-bubble">昨晚梦到什么了嘛?记录一下吧 🤗</view>
     <view class="input-area">
-      <input class="dream-input" placeholder="write your dream" placeholder-style="color: rgba(60, 60, 67, 0.6)" bindtap="showInputModal"/>
-      <view class="voice-btn" bindtap="startVoiceInput">
-        <image src="/assets/icons/mic.png" mode="aspectFit"></image>
+      <view class="dream-input">
+        <input placeholder="write your dream" 
+               placeholder-style="color: rgba(60, 60, 67, 0.6)" 
+               bindtap="showDreamInput"/>
       </view>
     </view>
   </view>
+
+  <!-- 在底部添加梦境输入组件 -->
+  <dream-input 
+    visible="{{showDreamInput}}" 
+    bind:save="onDreamSave"
+    bind:close="onDreamInputClose"
+  />
+
+  <!-- 添加梦境分析浮层 -->
+  <dream-analysis
+    visible="{{showDreamAnalysis}}"
+    dreamData="{{currentDream}}"
+    bind:close="onDreamAnalysisClose"
+  />
 </view>
