@@ -55,10 +55,18 @@
         <text class="item-title">💕 爱情运势：</text>
         <text class="item-content">{{fortune.love}}</text>
       </view>
+      <view class="fortune-item">
+        <text class="item-title">💰 财富运势：</text>
+        <text class="item-content">{{fortune.money}}</text>
+      </view>
+      <view class="fortune-item">
+        <text class="item-title">🏃 健康运势：</text>
+        <text class="item-content">{{fortune.health}}</text>
+      </view>
       <view class="fortune-numbers">
         <text>🔢 幸运数字：{{fortune.luckyNumber}}</text>
         <text>🎨 幸运色：{{fortune.luckyColor}}</text>
-        <text>🧭 幸运方向：{{fortune.luckyDirection}}</text>
+        <text>🧭 幸运星座：{{fortune.luckyDirection}}</text>
       </view>
     </view>
   </view>
@@ -104,19 +112,20 @@
   <view class="input-section">
     <view class="chat-bubble">昨晚梦到什么了嘛?记录一下吧 🤗</view>
     <view class="input-area">
-      <view class="dream-input">
+      <view class="dream-input" bindtap="showDreamInput">
         <input placeholder="write your dream" 
                placeholder-style="color: rgba(60, 60, 67, 0.6)" 
-               bindtap="showDreamInput"/>
+               disabled />
+        <image class="voice-icon" src="/assets/icons/voice.png" mode="aspectFit" />
       </view>
     </view>
   </view>
 
   <!-- 在底部添加梦境输入组件 -->
   <dream-input 
-    visible="{{showDreamInput}}" 
+    show="{{showDreamInput}}" 
     bind:save="onDreamSave"
-    bind:close="onDreamInputClose"
+    bind:close="hideDreamInput"
   />
 
   <!-- 添加梦境分析浮层 -->

@@ -23,27 +23,38 @@ Component({
       overall: '',
       career: '',
       love: '',
+      money: '',
+      health: '',
       luckyNumber: '',
       luckyColor: '',
       luckyDirection: ''
     },
     weeklyReport: {
-      image: '', // 将由AI生成的图片URL
+      image: '',
       keywords: '本周你的梦境中出现最多的是【自由】【压力】【探索】，这些关键词可能与你近期的情绪或生活事件有关。',
       analysis: '重复出现的场景或人物，可能反映了你内心未解决的问题。梦中追逐或迷路的情节，或许是内心对方向感缺失的隐喻。如果梦里充满新奇事物，这可能是你潜意识在激发创造力。',
       emotionTrend: '本周梦境情绪呈现【波动】的特点，建议关注梦境带来的情绪变化，这会帮助你更好地了解自己的内心需求。',
       aiSuggestion: '试着记录梦中细节，特别是让你印象深刻的画面，或许能挖掘出潜藏的灵感或答案！'
     },
     isReportExpanded: false,
-    showDreamInput: false,
-    showDreamAnalysis: false,
-    currentDream: null
+    showDreamInput: false
   },
 
   lifetimes: {
     attached() {
       this.updateDateInfo()
       this.fetchDreamTheory()
+      
+      // 获取保存的星座并更新运势
+      const savedZodiac = wx.getStorageSync('userZodiac')
+      if (savedZodiac) {
+        const zodiacIndex = this.data.zodiacs.findIndex(z => z === savedZodiac)
+        this.setData({ 
+          zodiacIndex,
+          hasSelectedZodiac: true
+        })
+        this.fetchFortune(savedZodiac)
+      }
     }
   },
 
@@ -59,19 +70,12 @@ Component({
         dateInfo: {
           date: `${year}.${month}.${day}`,
           weekday: `周${weekdays[now.getDay()]}`,
-          lunar: '腊月廿四' // TODO: 需要集成农历转换库
+          lunar: '腊月廿四'
         }
       })
     },
 
     async fetchDreamTheory() {
-      // TODO: 调用接口获取每日梦境知识
-      // const response = await api.getDreamTheory();
-      // this.setData({
-      //   dreamTheory: response.data
-      // })
-      
-      // 临时测试数据
       this.setData({
         dreamTheory: {
           title: '弗洛伊德的梦境理论',
@@ -81,161 +85,124 @@ Component({
     },
 
     handleZodiacChange(e: any) {
-      const index = e.detail.value;
+      const index = e.detail.value
       this.setData({ 
         zodiacIndex: index,
         hasSelectedZodiac: true,
         isFortuneExpanded: true
-      });
-      this.fetchFortune(this.data.zodiacs[index]);
+      })
+      this.fetchFortune(this.data.zodiacs[index])
     },
 
     toggleFortune() {
-      if (!this.data.hasSelectedZodiac) return;
+      if (!this.data.hasSelectedZodiac) return
       
       this.setData({
         isFortuneExpanded: !this.data.isFortuneExpanded
-      });
+      })
     },
 
     async fetchFortune(zodiac: string) {
-      // TODO: 调用接口获取运势数据
-      // const response = await api.getFortune(zodiac);
-      // this.setData({ fortune: response.data });
-      
-      // 临时测试数据
-      this.setData({
-        fortune: {
-          overall: '今天的你充满自信与创造力，适合在工作或生活中大胆表达自己的想法。',
-          career: '你的领导能力在团队中显得尤为突出，关键时刻的果断决策会让你脱颖而出。',
-          love: '单身的你可能会遇到意想不到的缘分，已有伴侣的你们感情会更进一步。',
-          luckyNumber: '6',
-          luckyColor: '紫色',
-          luckyDirection: '东北'
+      // 星座英文名映射
+      const zodiacMap: { [key: string]: string } = {
+        '白羊座': 'aries',
+        '金牛座': 'taurus',
+        '双子座': 'gemini',
+        '巨蟹座': 'cancer',
+        '狮子座': 'leo',
+        '处女座': 'virgo',
+        '天秤座': 'libra',
+        '天蝎座': 'scorpio',
+        '射手座': 'sagittarius',
+        '摩羯座': 'capricorn',
+        '水瓶座': 'aquarius',
+        '双鱼座': 'pisces'
+      }
+
+      try {
+        const zodiacEn = zodiacMap[zodiac]
+        if (!zodiacEn) {
+          throw new Error('无效的星座选择')
         }
-      });
+
+        const result = await new Promise((resolve, reject) => {
+          wx.request({
+            url: 'https://api.vvhan.com/api/horoscope',
+            method: 'GET',
+            data: {
+              type: zodiacEn,
+              time: 'today'
+            },
+            success: (res: any) => {
+              console.log('运势接口返回:', res.data) // 添加日志
+              resolve(res)
+            },
+            fail: (err: any) => {
+              console.error('运势接口错误:', err) // 添加日志
+              reject(err)
+            }
+          })
+        }) as WechatMiniprogram.RequestSuccessCallbackResult
+
+        const data = result.data as any
+        if (data && data.success) {
+          // 保存用户的星座选择
+          wx.setStorageSync('userZodiac', zodiac)
+          
+          this.setData({
+            fortune: {
+              overall: data.data.fortunetext.all || '',
+              career: data.data.fortunetext.work || '',
+              love: data.data.fortunetext.love || '',
+              money: data.data.fortunetext.money || '',
+              health: data.data.fortunetext.health || '',
+              luckyNumber: data.data.luckynumber || '',
+              luckyColor: data.data.luckycolor || '',
+              luckyDirection: data.data.luckyconstellation || '' // 修改为幸运星座
+            },
+            hasSelectedZodiac: true
+          })
+        } else {
+          throw new Error('接口返回数据格式错误')
+        }
+      } catch (error) {
+        console.error('获取运势失败:', error)
+        wx.showToast({
+          title: '获取运势失败',
+          icon: 'error'
+        })
+      }
     },
 
     toggleReport() {
       this.setData({
         isReportExpanded: !this.data.isReportExpanded
-      });
-    },
-
-    async fetchWeeklyReport() {
-      try {
-        // TODO: 调用接口获取周报数据
-        // const reportData = await api.getWeeklyReport();
-        // const dreamImage = await api.generateDreamImage(keywords, prompt);
-        // this.setData({
-        //   weeklyReport: {
-        //     image: dreamImage,
-        //     ...reportData
-        //   }
-        // });
-      } catch (error) {
-        console.error('获取周报失败：', error);
-      }
-    },
-
-    showInputModal() {
-      // TODO: 实现弹出输入浮层
-      wx.showModal({
-        title: '记录梦境',
-        editable: true,
-        placeholderText: '描述一下你的梦境...',
-        success: (res) => {
-          if (res.confirm && res.content) {
-            // TODO: 处理输入的内容
-            console.log('梦境内容：', res.content);
-          }
-        }
-      });
-    },
-
-    startVoiceInput() {
-      // 1. 显示录音浮层
-      wx.showModal({
-        title: '语音输入',
-        content: '请点击"开始录音"按钮并说话',
-        showCancel: true,
-        cancelText: '取消',
-        confirmText: '开始录音',
-        success: (res) => {
-          if (res.confirm) {
-            // 2. 开始录音
-            const recorderManager = wx.getRecorderManager();
-            
-            recorderManager.onStart(() => {
-              wx.showLoading({
-                title: '正在录音...',
-              });
-            });
-
-            recorderManager.onStop((res) => {
-              wx.hideLoading();
-              // 3. 将录音文件发送到语音识别服务
-              // TODO: 调用语音识别API
-              console.log('录音文件路径:', res.tempFilePath);
-              
-              // 临时显示提示
-              wx.showToast({
-                title: '语音识别功能开发中',
-                icon: 'none'
-              });
-            });
-
-            recorderManager.onError((res) => {
-              wx.hideLoading();
-              wx.showToast({
-                title: '录音失败',
-                icon: 'error'
-              });
-            });
-
-            // 开始录音
-            recorderManager.start({
-              duration: 60000, // 最长录音时间，单位ms
-              sampleRate: 16000,
-              numberOfChannels: 1,
-              encodeBitRate: 48000,
-              format: 'mp3'
-            });
-
-            // 5秒后自动停止录音
-            setTimeout(() => {
-              recorderManager.stop();
-            }, 5000);
-          }
-        }
-      });
+      })
     },
 
     showDreamInput() {
-      this.setData({
-        showDreamInput: true
-      });
+      this.setData({ showDreamInput: true })
+    },
+
+    hideDreamInput() {
+      this.setData({ showDreamInput: false })
     },
 
     onDreamSave(e: any) {
-      console.log('保存梦境:', e.detail)
-      this.setData({
-        showDreamInput: false,
-        showDreamAnalysis: true,
-        currentDream: e.detail
-      })
-    },
-
-    onDreamInputClose() {
-      this.setData({
-        showDreamInput: false
-      })
-    },
-
-    onDreamAnalysisClose() {
-      this.setData({
-        showDreamAnalysis: false,
-        currentDream: null
+      const dreamData = {
+        ...e.detail,
+        id: Date.now() // 添加唯一ID
+      }
+      
+      // 保存梦境数据到本地存储
+      wx.setStorageSync('currentDream', dreamData)
+      
+      // 关闭输入浮层
+      this.hideDreamInput()
+      
+      // 跳转到分析页面
+      wx.navigateTo({
+        url: '/pages/analysis/analysis'
       })
     }
   }

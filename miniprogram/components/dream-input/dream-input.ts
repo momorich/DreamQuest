@@ -1,6 +1,6 @@
 Component({
   properties: {
-    visible: {
+    show: {
       type: Boolean,
       value: false
     }
@@ -9,82 +9,63 @@ Component({
   data: {
     title: '',
     content: '',
-    currentDate: ''
+    currentDate: '',
+    canSave: false
   },
 
   lifetimes: {
     attached() {
-      this.updateDate();
+      // 设置当前日期
+      const now = new Date()
+      const date = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`
+      this.setData({ currentDate: date })
+    }
+  },
+
+  observers: {
+    'title, content': function(title: string, content: string) {
+      // 当标题和内容都有值时才能保存
+      this.setData({
+        canSave: !!(title.trim() && content.trim())
+      })
     }
   },
 
   methods: {
-    updateDate() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-      
-      this.setData({
-        currentDate: `${year}.${month}.${day} 周${weekdays[now.getDay()]}`
-      });
-    },
-
     onTitleInput(e: any) {
-      this.setData({
-        title: e.detail.value
-      });
+      this.setData({ title: e.detail.value })
     },
 
     onContentInput(e: any) {
-      this.setData({
-        content: e.detail.value
-      });
+      this.setData({ content: e.detail.value })
     },
 
-    saveDream() {
-      const { title, content, currentDate } = this.data;
-      if (!title.trim() || !content.trim()) {
-        wx.showToast({
-          title: '请填写完整内容',
-          icon: 'none'
-        });
-        return;
-      }
-
+    onSave() {
+      if (!this.data.canSave) return
+      
+      const { title, content, currentDate } = this.data
       const dreamData = {
         title: title.trim(),
         content: content.trim(),
         date: currentDate
-      };
+      }
 
-      // 保存梦境数据到本地存储
-      wx.setStorageSync('currentDream', dreamData);
-
-      // 关闭输入浮层
-      this.triggerEvent('close');
-
-      // 跳转到分析页面
-      wx.navigateTo({
-        url: '/pages/analysis/analysis'
-      });
-
+      // 触发保存事件
+      this.triggerEvent('save', dreamData)
+      
       // 清空输入
       this.setData({
         title: '',
         content: ''
-      });
+      })
     },
 
-    // 点击遮罩关闭
-    onModalTap() {
-      this.triggerEvent('close');
+    hideDreamInput() {
+      this.triggerEvent('close')
     },
 
-    // 阻止冒泡
-    onContentTap(e: any) {
-      e.stopPropagation();
+    stopPropagation() {
+      // 阻止事件冒泡
     }
   }
-}); 
+}) 

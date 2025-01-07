@@ -1,4 +1,5 @@
 {
-  "navigationBarTitleText": "梦境解析",
-  "usingComponents": {}
+  "navigationBarTitleText": "梦境分析",
+  "usingComponents": {},
+  "enablePullDownRefresh": false
 } 

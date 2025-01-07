@@ -1,45 +1,50 @@
-<view class="container">
-  <!-- 标题和日期 -->
+<view class="container" wx:if="{{dreamData}}">
+  <!-- 标题栏 -->
   <view class="header">
     <text class="title">{{dreamData.title}}</text>
-    <text class="date">{{dreamData.date}}</text>
+    <text class="date">{{dreamData.date}} {{dreamData.weekday}}</text>
   </view>
 
   <!-- 梦境内容 -->
-  <view class="dream-content">
-    <text>{{dreamData.content}}</text>
+  <view class="dream-content-wrapper">
+    <view class="dream-content">{{dreamData.content}}</view>
   </view>
 
   <!-- AI生成的图片 -->
   <view class="dream-image">
-    <image src="/assets/default_dream.png" mode="aspectFill"></image>
+    <image src="{{dreamData.image || '/assets/images/default_dream.png'}}" mode="aspectFill"></image>
   </view>
 
-  <!-- 分析标签 -->
+  <!-- 标签区域 -->
   <view class="tags">
-    <text class="tag" wx:for="{{['神秘', '探索', '冒险']}}" wx:key="*this">{{item}}</text>
+    <view class="tag" wx:for="{{dreamData.tags || []}}" wx:key="index">{{item}}</view>
   </view>
 
-  <!-- AI对话区域 -->
+  <!-- 对话区域 -->
   <view class="chat-area">
-    <scroll-view class="messages" scroll-y scroll-into-view="msg{{messages.length - 1}}">
-      <view wx:for="{{messages}}" wx:key="index" class="message {{item.type}}" id="msg{{index}}">
-        <text>{{item.content}}</text>
-      </view>
-    </scroll-view>
+    <view wx:for="{{messages}}" 
+          wx:key="index" 
+          class="message {{item.type}}"
+          id="msg-{{index}}">
+      <rich-text class="message-content" nodes="{{item.content}}"></rich-text>
+    </view>
   </view>
 
   <!-- 输入区域 -->
-  <view class="input-area">
-    <input class="message-input" 
+  <view class="input-section">
+    <input class="input-box" 
+           placeholder="说点什么..." 
            value="{{inputMessage}}"
-           bindinput="onMessageInput"
-           placeholder="输入消息..."
-           placeholder-style="color: rgba(60, 60, 67, 0.6)"/>
-    <button class="send-btn {{inputMessage ? 'active' : ''}}" 
-            bindtap="sendMessage"
-            disabled="{{!inputMessage}}">
-      <image src="/assets/icons/send.png" mode="aspectFit"></image>
-    </button>
+           adjust-position="{{true}}"
+           cursor-spacing="20"
+           bindinput="onMessageInput" />
+    <button class="save-btn {{!inputMessage ? 'disabled' : ''}}" 
+            bindtap="sendMessage">发送</button>
   </view>
+</view>
+
+<!-- 加载失败提示 -->
+<view class="empty-state" wx:else>
+  <image src="/assets/images/empty.png" mode="aspectFit"></image>
+  <text>加载失败，请返回重试</text>
 </view> 
