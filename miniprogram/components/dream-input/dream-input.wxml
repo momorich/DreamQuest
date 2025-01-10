@@ -21,7 +21,7 @@
     </view>
     <view class="footer">
       <button class="save-btn {{canSave ? '' : 'disabled'}} {{isGeneratingImage ? 'loading' : ''}}" 
-              bindtap="onSave" 
+              bindtap="onSave"
               disabled="{{!canSave || isGeneratingImage}}">
         {{isGeneratingImage ? '生成中...' : '保存'}}
       </button>

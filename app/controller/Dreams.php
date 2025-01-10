@@ -9,6 +9,9 @@ use think\Response;
 
 class Dreams
 {
+    private $apiKey = 'sk-5e355a7af3b842f1b646034657664a76';
+    private $baseUrl = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/generation';
+    
     /**
      * 处理图片上传
      */
@@ -68,101 +71,55 @@ class Dreams
                 return json(['error' => '梦境描述不能为空']);
             }
 
-            // 腾讯云API配置
-            $secretId = getenv('HUNYUAN_SECRET_ID');
-            $secretKey = getenv('HUNYUAN_SECRET_KEY');
-            $region = "ap-guangzhou";
-            $endpoint = "hunyuan.tencentcloudapi.com";
-
-            // 准备请求参数
-            $params = [
-                'Prompt' => $prompt,
-                'RspImgType' => 'url'
+            // 准备请求参数，按照阿里云文档格式
+            $requestData = [
+                'model' => 'flux-schnell',
+                'input' => [
+                    'prompt' => $prompt
+                ],
+                'parameters' => [
+                    'size' => '768*512',
+                    'n' => 1
+                ]
             ];
 
-            // 发送请求到腾讯云
-            $result = $this->callTencentAPI($secretId, $secretKey, $region, $endpoint, $params);
+            // 发送请求到阿里云 FLUX API
+            $ch = curl_init($this->baseUrl);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . $this->apiKey,
+                'Content-Type: application/json',
+                'X-DashScope-Async: false'
+            ]);
 
-            return json($result);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode !== 200) {
+                $error = json_decode($response, true);
+                throw new \Exception($error['message'] ?? '请求失败');
+            }
+
+            $result = json_decode($response, true);
+            
+            // 检查是否成功生成图片
+            if (!isset($result['output']['results'][0]['url'])) {
+                throw new \Exception('未获取到生成的图片URL');
+            }
+
+            return json([
+                'error' => null,
+                'imageUrl' => $result['output']['results'][0]['url']
+            ]);
+            
         } catch (\Exception $e) {
             return json([
                 'error' => '生成图片失败',
                 'message' => $e->getMessage()
             ], 500);
         }
-    }
-
-    private function callTencentAPI($secretId, $secretKey, $region, $endpoint, $params)
-    {
-        $timestamp = time();
-        $date = gmdate('Y-m-d', $timestamp);
-
-        // 1. 准备签名所需参数
-        $algorithm = "TC3-HMAC-SHA256";
-        $service = "hunyuan";
-        $action = "TextToImageLite";
-        $version = "2023-09-01";
-        $credentialScope = $date . "/" . $service . "/tc3_request";
-
-        // 2. 准备规范请求串
-        $httpRequestMethod = "POST";
-        $canonicalUri = "/";
-        $canonicalQueryString = "";
-        $payload = json_encode($params);
-        $hashedRequestPayload = hash("SHA256", $payload);
-
-        $canonicalHeaders = "content-type:application/json\n"
-            . "host:" . $endpoint . "\n"
-            . "x-tc-action:" . strtolower($action) . "\n";
-        $signedHeaders = "content-type;host;x-tc-action";
-
-        $canonicalRequest = $httpRequestMethod . "\n"
-            . $canonicalUri . "\n"
-            . $canonicalQueryString . "\n"
-            . $canonicalHeaders . "\n"
-            . $signedHeaders . "\n"
-            . $hashedRequestPayload;
-
-        // 3. 准备待签名字符串
-        $hashedCanonicalRequest = hash("SHA256", $canonicalRequest);
-        $stringToSign = $algorithm . "\n"
-            . $timestamp . "\n"
-            . $credentialScope . "\n"
-            . $hashedCanonicalRequest;
-
-        // 4. 计算签名
-        $secretDate = hash_hmac("SHA256", $date, "TC3" . $secretKey, true);
-        $secretService = hash_hmac("SHA256", $service, $secretDate, true);
-        $secretSigning = hash_hmac("SHA256", "tc3_request", $secretService, true);
-        $signature = hash_hmac("SHA256", $stringToSign, $secretSigning);
-
-        // 5. 组装授权信息
-        $authorization = $algorithm
-            . " Credential=" . $secretId . "/" . $credentialScope
-            . ", SignedHeaders=" . $signedHeaders
-            . ", Signature=" . $signature;
-
-        // 6. 发送请求
-        $ch = curl_init("https://" . $endpoint);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $httpRequestMethod);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: " . $authorization,
-            "Content-Type: application/json",
-            "Host: " . $endpoint,
-            "X-TC-Action: " . $action,
-            "X-TC-Timestamp: " . $timestamp,
-            "X-TC-Version: " . $version,
-            "X-TC-Region: " . $region
-        ]);
-
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            throw new \Exception(curl_error($ch));
-        }
-        curl_close($ch);
-
-        return json_decode($response, true);
     }
 } 
