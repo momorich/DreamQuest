@@ -9,16 +9,5 @@ export interface GenerateImageParams {
   style: DreamImageStyle
   width: number
   height: number
-  use_sr?: boolean
   return_url?: boolean
-}
-
-// 火山引擎API响应
-export interface VolcengineResponse {
-  code: number
-  message: string
-  data: {
-    image_urls?: string[]
-    binary_data_base64?: string[]
-  }
 } 
