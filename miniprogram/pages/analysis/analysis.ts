@@ -1,5 +1,3 @@
-import { dreamImageService } from '../../services'
-
 interface Message {
   type: 'ai' | 'user';
   content: string;
@@ -65,6 +63,7 @@ Page({
         dreamData: existingDream,
         messages: existingDream.messages || []
       })
+      console.log('已加载现有记录的图片:', existingDream.image)
     } else {
       console.log('创建新记录，基础数据:', dreamData)
       // 如果是新记录，设置基本信息并请求 AI 分析
@@ -76,11 +75,12 @@ Page({
         content: dreamData.content,
         date: dreamData.date,
         weekday: `周${weekday}`,
-        image: '/assets/images/default_dream.png',
+        image: dreamData.image || '/assets/images/default_dream.png',
         tags: [] // 初始化为空数组
       }
       
       console.log('设置初始数据:', initialDreamData)
+      console.log('使用的图片:', initialDreamData.image)
       
       this.setData({ 
         dreamData: initialDreamData

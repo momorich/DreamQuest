@@ -20,9 +20,11 @@
       <view class="word-count">{{content.length}}/500</view>
     </view>
     <view class="footer">
-      <button class="save-btn {{canSave ? '' : 'disabled'}}" 
+      <button class="save-btn {{canSave ? '' : 'disabled'}} {{isGeneratingImage ? 'loading' : ''}}" 
               bindtap="onSave" 
-              disabled="{{!canSave}}">保存</button>
+              disabled="{{!canSave || isGeneratingImage}}">
+        {{isGeneratingImage ? '生成中...' : '保存'}}
+      </button>
     </view>
   </view>
 </view> 
