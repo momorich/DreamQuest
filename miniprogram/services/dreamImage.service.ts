@@ -38,10 +38,10 @@ export async function generateDreamImage(text: string): Promise<string> {
           console.log('\n=== 收到任务提交响应 ===')
           console.log('响应数据:', JSON.stringify(res.data, null, 2))
           
-          if (res.data?.output?.task_id) {
+          if (res.data && res.data.output && res.data.output.task_id) {
             console.log('任务已提交:', res.data.output.task_id)
             resolve(res.data.output.task_id)
-          } else if (res.data?.code) {
+          } else if (res.data && res.data.code) {
             console.error('提交失败:', res.data.message || res.data.code)
             wx.showToast({
               title: '生成失败: ' + (res.data.message || res.data.code),
@@ -95,8 +95,8 @@ export async function generateDreamImage(text: string): Promise<string> {
             console.log('\n=== 收到任务状态响应 ===')
             console.log('响应数据:', JSON.stringify(res.data, null, 2))
 
-            if (res.data?.output?.task_status === 'SUCCEEDED') {
-              if (res.data.output.results?.[0]?.url) {
+            if (res.data && res.data.output && res.data.output.task_status === 'SUCCEEDED') {
+              if (res.data.output.results && res.data.output.results[0] && res.data.output.results[0].url) {
                 console.log('生成成功:', res.data.output.results[0].url)
                 resolve(res.data.output.results[0].url)
               } else {
@@ -106,14 +106,14 @@ export async function generateDreamImage(text: string): Promise<string> {
                 })
                 reject(new Error('未获取到图片URL'))
               }
-            } else if (res.data?.output?.task_status === 'FAILED') {
+            } else if (res.data && res.data.output && res.data.output.task_status === 'FAILED') {
               console.error('生成失败:', res.data)
               wx.showToast({
                 title: res.data.output.message || '生成失败',
                 icon: 'none'
               })
               reject(new Error('生成失败: ' + JSON.stringify(res.data)))
-            } else if (['PENDING', 'RUNNING'].includes(res.data?.output?.task_status)) {
+            } else if (res.data && res.data.output && ['PENDING', 'RUNNING'].includes(res.data.output.task_status)) {
               retryCount++;
               // 继续轮询，使用递增的延迟时间
               setTimeout(checkStatus, 1000 + retryCount * 500)
@@ -122,7 +122,7 @@ export async function generateDreamImage(text: string): Promise<string> {
                 title: '未知状态',
                 icon: 'none'
               })
-              reject(new Error('未知状态: ' + res.data?.output?.task_status))
+              reject(new Error('未知状态: ' + (res.data && res.data.output && res.data.output.task_status || 'unknown')))
             }
           },
           fail: (err) => {

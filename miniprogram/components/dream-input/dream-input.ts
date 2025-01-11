@@ -67,6 +67,7 @@ Component({
         title: title.trim(),
         content: content.trim(),
         date: currentDate,
+        weekday: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][new Date(currentDate.replace(/\./g, '-')).getDay()],
         image: '/assets/images/default_dream.png'  // 默认图片
       }
 

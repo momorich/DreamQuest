@@ -67,7 +67,7 @@ Page({
     } else {
       console.log('创建新记录，基础数据:', dreamData)
       // 如果是新记录，设置基本信息并请求 AI 分析
-      const weekday = ['日', '一', '二', '三', '四', '五', '六'][new Date(dreamData.date).getDay()]
+      const weekday = ['日', '一', '二', '三', '四', '五', '六'][new Date(dreamData.date.replace(/\./g, '-')).getDay()]
       
       const initialDreamData = {
         id: dreamData.id || Date.now(),
@@ -162,7 +162,7 @@ Page({
     }) as WechatMiniprogram.RequestSuccessCallbackResult
 
     const response = result.data as any
-    if (response?.choices?.[0]?.message?.content) {
+    if (response && response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content) {
       return response.choices[0].message.content
     }
     throw new Error('AI 回复格式错误')
@@ -199,7 +199,7 @@ Page({
     }) as WechatMiniprogram.RequestSuccessCallbackResult
 
     const response = result.data as any
-    if (response?.choices?.[0]?.message?.content) {
+    if (response && response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content) {
       // 解析返回的标签字符串
       const tags = response.choices[0].message.content
         .split(',')
