@@ -240,5 +240,46 @@ Page({
     }
     this.setData({ currentYear, currentMonth });
     this.generateCalendarDays();
+  },
+
+  onSearchInput(e: any) {
+    this.setData({
+      searchKeyword: e.detail.value
+    })
+  },
+
+  clearSearch() {
+    this.setData({
+      searchKeyword: '',
+      dreamList: this.data.originalDreamList
+    })
+  },
+
+  search() {
+    const keyword = this.data.searchKeyword.trim().toLowerCase()
+    if (!keyword) {
+      this.setData({
+        dreamList: this.data.originalDreamList
+      })
+      return
+    }
+
+    const originalDreams = wx.getStorageSync('dreams') || []
+    const filteredDreams = originalDreams.filter((dream: DreamRecord) => {
+      return dream.title.toLowerCase().includes(keyword) || 
+             dream.content.toLowerCase().includes(keyword) ||
+             dream.tags.some(tag => tag.toLowerCase().includes(keyword))
+    })
+
+    // 更新列表视图
+    const groupedDreams = this.groupDreamsByMonth(filteredDreams)
+    this.setData({
+      dreamList: groupedDreams
+    })
+  },
+
+  getSelectedDateDreams(date: string) {
+    const dreams = wx.getStorageSync('dreams') || []
+    return dreams.filter((dream: DreamRecord) => dream.date === date)
   }
 }) 
