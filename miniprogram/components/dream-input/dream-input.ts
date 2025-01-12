@@ -91,9 +91,6 @@ Component({
         // 保存到本地存储
         wx.setStorageSync('currentDream', dreamData)
         
-        // 触发保存事件
-        this.triggerEvent('save', dreamData)
-        
         // 清空输入
         this.setData({
           title: '',
