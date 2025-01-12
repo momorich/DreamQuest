@@ -2,7 +2,6 @@
   "pages": [
     "pages/index/index",
     "pages/record/record",
-    "pages/profile/profile",
     "pages/analysis/analysis"
   ],
   "window": {
@@ -12,6 +11,7 @@
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
+    "custom": false,
     "color": "#999999",
     "selectedColor": "#971FCF",
     "backgroundColor": "#ffffff",
@@ -27,12 +27,6 @@
         "text": "记录",
         "iconPath": "assets/tabbar/record.png",
         "selectedIconPath": "assets/tabbar/record_selected.png"
-      },
-      {
-        "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "assets/tabbar/profile.png",
-        "selectedIconPath": "assets/tabbar/profile_selected.png"
       }
     ]
   },
